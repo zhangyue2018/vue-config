@@ -8,6 +8,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const { DefinePlugin } = require('webpack');
 
+const AutoImport = require('unplugin-auto-import/webpack');
+const Components = require('unplugin-vue-components/webpack');
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 // 返回处理样式loader的函数
@@ -117,6 +121,12 @@ module.exports = {
         new DefinePlugin({
             __VUE_OPTIONS_API__: true,
             __VUE_PROD_DEVTOOLS__: false,
+        }),
+        AutoImport({
+            resolvers: [ElementPlusResolver()]
+        }),
+        Components({
+            resolvers: [ElementPlusResolver()]
         }),
     ].filter(Boolean),
     mode: isProduction ? 'production' : 'development', // 在production环境下，html会自动进行压缩
