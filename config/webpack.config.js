@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // 提取css成单独文件
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin'); // css压缩
 const TerserWebpackPlugin = require('terser-webpack-plugin'); // js代码压缩
-const ImageMinimizerWebpackPlugin = require('image-minimizer-webpack-plugin'); // 图片压缩
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const { DefinePlugin } = require('webpack');
@@ -99,32 +98,6 @@ module.exports = {
         isProduction && new MiniCssExtractPlugin({
             filename: 'static/css/[name].[contenthash:10].css',
             chunkFilename: 'static/css/[name].[contenthash:10].chunk.css',
-        }),
-        isProduction && new ImageMinimizerWebpackPlugin({
-            minimizer: {
-                implementation: ImageMinimizerWebpackPlugin.imageminGenerate,
-                options: {
-                    plugins: [
-                        ['gifsicle', { interlaced: true }],
-                        ['jpegtran', { progressive: true }],
-                        ['optipng', {optimizationLevel: 5 }],
-                        [
-                            "svgo", {
-                                plugins: [
-                                    "preset-default",
-                                    "prefixIds",
-                                    {
-                                        name: 'sortAttrs',
-                                        params: {
-                                            xmlnsOrder: 'alphabetical',
-                                        }
-                                    }
-                                ],
-                            }
-                        ]
-                    ],
-                }
-            }
         }),
         isProduction && new CopyWebpackPlugin({
             patterns: [
