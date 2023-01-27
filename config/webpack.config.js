@@ -90,6 +90,10 @@ module.exports = {
             {
                 test: /\.vue$/,
                 loader: 'vue-loader',
+                options: {
+                    // 开启缓存
+                    cacheDirectory: path.resolve(__dirname, '../node_modules/.cache/vue-loader'),
+                }
             }
         ]
     },
@@ -143,6 +147,23 @@ module.exports = {
     optimization: {
         splitChunks: {
             chunks: 'all',
+            cacheGroups: {
+                vue: {
+                    test: /node_modules[\\/]vue(.*)?[\\/]/,
+                    name: 'vue-chunk',
+                    priority: 40,
+                },
+                elementPlus: {
+                    test: /node_modules[\\/]element-plus[\\/]/,
+                    name: 'elementPlus-chunk',
+                    priority: 30,
+                },
+                libs: {
+                    test: /node_modules[\\/]/,
+                    name: 'libs-chunk',
+                    priority: 20,
+                }
+            }
         },
         runtimeChunk: {
             name: (entryPoint) => `runtime~${entryPoint.name}`
