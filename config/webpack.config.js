@@ -29,7 +29,12 @@ const getStyleLoaders = (pre) => {
                 }
             }
         },
-        pre
+        pre && {
+            loader: pre,
+            options: pre === 'sass-loader' ? {
+                additionalData: `@use "@/styles/element/index.scss" as *;`,
+            } : {},
+        },
     ].filter(Boolean);
 }
 
@@ -122,11 +127,15 @@ module.exports = {
             __VUE_OPTIONS_API__: true,
             __VUE_PROD_DEVTOOLS__: false,
         }),
+        // 按需加载element-pusd的配置
         AutoImport({
             resolvers: [ElementPlusResolver()]
         }),
         Components({
-            resolvers: [ElementPlusResolver()]
+            resolvers: [ElementPlusResolver({
+                // 自定义主题的配置，引入sass
+                importStyle: 'sass'
+            })]
         }),
     ].filter(Boolean),
     mode: isProduction ? 'production' : 'development', // 在production环境下，html会自动进行压缩
@@ -148,7 +157,11 @@ module.exports = {
     // webpack解析模块加载选项
     resolve: {
         // 自动补全文件扩展名
-        extensions: [".vue", ".js", ".json"]
+        extensions: [".vue", ".js", ".json"],
+        // 路径别名
+        alias: {
+            "@": path.resolve(__dirname, '../src'),
+        }
     },
     // 需要运行指令时加server 参数，才会激活devServer配置
     devServer: {
